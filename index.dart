@@ -1,42 +1,19 @@
-import 'dart:convert';
 
 import 'package:bloc_notes/main.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc_notes/home.dart';
-import 'package:http/http.dart' as http;
 
-class MyShowPage extends StatefulWidget {
-  MyShowPage({Key? key}) : super(key: key);
+class NoteDetailsPage extends StatefulWidget {
+  const NoteDetailsPage({Key? key}) : super(key: key);
 
   @override
-  _MyShowPageState createState() => _MyShowPageState();
+  _MyNoteDetailsPageState createState() => _MyNoteDetailsPageState();
 }
 
-class _MyShowPageState extends State<MyShowPage> {
+class _MyNoteDetailsPageState extends State<NoteDetailsPage> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
 
-  // Fonction pour ajouter la note
-  Future<void> _saveNote() async {
-    final url = Uri.parse('http://127.0.0.1:8000/api/note');
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: json.encode({
-        'titre': titleController.text, // Utilisez la valeur du contrôleur du titre
-        'contenu': contentController.text, // Utilisez la valeur du contrôleur du contenu
-      }),
-    );
-    if (response.statusCode == 200) {
-      // gestion des reponses
-      print('Note enregistree avec succes.');
-    } else {
-      // La requête a échoué, vous pouvez gérer les erreurs ici
-      print('Erreur lors de l enregistrement de la note.');
-      }
-      }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +45,7 @@ class _MyShowPageState extends State<MyShowPage> {
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Container(
               decoration: BoxDecoration(
                 color: Colors.blueGrey,
@@ -93,7 +70,7 @@ class _MyShowPageState extends State<MyShowPage> {
 
             InkWell(        //InkWell est un widget Flutter qui est utilisé pour ajouter des interactions clics ou touches
               onTap: () {
-                _saveNote(); // Appeler la fonction pour enregistrer la note
+
                 Navigator.of(context).pop(); // Naviguer vers la page d'accueil
               },
               child: Container(
@@ -104,7 +81,7 @@ class _MyShowPageState extends State<MyShowPage> {
                 padding: EdgeInsets.all(16),
                 child: const Center(
                   child: Text(
-                    'Enregistrer',
+                    'Modifier',
                     style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w700),
                   ),
                 ),

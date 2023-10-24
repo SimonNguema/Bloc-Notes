@@ -1,61 +1,64 @@
 import 'dart:convert';
-
+import 'package:bloc_notes/read.dart';
 import 'package:bloc_notes/main.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc_notes/home.dart';
 import 'package:http/http.dart' as http;
 
-class MyShowPage extends StatefulWidget {
-  MyShowPage({Key? key}) : super(key: key);
+class MyReadPage extends StatefulWidget {
+  final int noteId; // Ajout de l'ID de la note
+
+  MyReadPage({Key? key, required this.noteId}) : super(key: key);
 
   @override
-  _MyShowPageState createState() => _MyShowPageState();
+  _MyReadPageState createState() => _MyReadPageState();
 }
 
-class _MyShowPageState extends State<MyShowPage> {
+class _MyReadPageState extends State<MyReadPage> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
 
-  // Fonction pour ajouter la note
-  Future<void> _saveNote() async {
-    final url = Uri.parse('http://127.0.0.1:8000/api/note');
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: json.encode({
-        'titre': titleController.text, // Utilisez la valeur du contrôleur du titre
-        'contenu': contentController.text, // Utilisez la valeur du contrôleur du contenu
-      }),
-    );
+  @override
+  void initState() {
+    super.initState();
+    _fetchNoteDetails();
+  }
+
+  Future<void> _fetchNoteDetails() async {
+    final response = await http.get(Uri.parse('http://127.0.0.1:8000/api/note/${widget.noteId}'));
+
     if (response.statusCode == 200) {
-      // gestion des reponses
-      print('Note enregistree avec succes.');
-    } else {
-      // La requête a échoué, vous pouvez gérer les erreurs ici
-      print('Erreur lors de l enregistrement de la note.');
-      }
-      }
+      final Map<String, dynamic> noteData = json.decode(response.body);
+
+      // Récupérer le titre et le contenu de la note
+      final String titre = noteData['titre'];
+      final String contenu = noteData['contenu'];
+
+      // Mettre à jour les contrôleurs avec les données de la note
+      titleController.text = titre;
+      contentController.text = contenu;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ajouter une note'),
+        title: Text('Détail d\'une note'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: <Widget>[
-            SizedBox(height: 100),
+            SizedBox(height: 20),
+            // Zone de texte pour le titre de la note
             Container(
               decoration: BoxDecoration(
                 color: Colors.blueGrey,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: TextFormField(
-                controller: titleController, // Utilisez le contrôleur du titre
+                controller: titleController,
                 decoration: const InputDecoration(
                   hintText: 'Titre',
                   contentPadding: EdgeInsets.all(16),
@@ -69,13 +72,14 @@ class _MyShowPageState extends State<MyShowPage> {
               ),
             ),
             SizedBox(height: 16),
+            // Zone de texte pour le contenu de la note
             Container(
               decoration: BoxDecoration(
                 color: Colors.blueGrey,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: TextFormField(
-                controller: contentController, // Utilisez le contrôleur du contenu
+                controller: contentController,
                 maxLines: 10,
                 decoration: const InputDecoration(
                   hintText: 'Contenu',
@@ -89,28 +93,6 @@ class _MyShowPageState extends State<MyShowPage> {
                 ),
               ),
             ),
-            SizedBox(height: 25),
-
-            InkWell(        //InkWell est un widget Flutter qui est utilisé pour ajouter des interactions clics ou touches
-              onTap: () {
-                _saveNote(); // Appeler la fonction pour enregistrer la note
-                Navigator.of(context).pop(); // Naviguer vers la page d'accueil
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                padding: EdgeInsets.all(16),
-                child: const Center(
-                  child: Text(
-                    'Enregistrer',
-                    style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w700),
-                  ),
-                ),
-              ),
-            )
-
           ],
         ),
       ),
