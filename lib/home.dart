@@ -6,11 +6,12 @@ import 'package:bloc_notes/read.dart';
 import 'package:http/http.dart' as http;
 
 
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false, // Pour masquer le bannière de débogage
+      debugShowCheckedModeBanner: false,
       home: MyHomePage(),
     );
   }
@@ -32,6 +33,8 @@ class _MyHomePageState extends State<MyHomePage> {
     _fetchNotes();
   }
 
+
+
   Future<void> _fetchNotes() async {
     final response = await http.get(Uri.parse('http://127.0.0.1:8000/api/note'));
 
@@ -50,15 +53,27 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Future<void> _deleteNote(int noteId) async {
+    final response = await http.delete(Uri.parse('http://127.0.0.1:8000/api/note/$noteId'));
+
+    if (response.statusCode == 200) {
+      print('La note a été supprimée avec succès');
+    } else {
+      print('Erreur lors de la suppression');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Note'),
+        title: Text('Notes'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.menu),
-            onPressed: () {},
+            onPressed: () {
+              // Action à effectuer lorsque l'icône de menu est pressée
+            },
           ),
         ],
       ),
@@ -109,12 +124,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 final note = notes[index];
                 return Dismissible(
                   key: Key(note.noteId.toString()),
-                  onDismissed: (direction) {  //glisser vers la gauche pour supprimer
+                  onDismissed: (direction) {
+                    _deleteNote(note.noteId);
                     setState(() {
                       notes.removeAt(index);
                     });
                   },
-                  background: Container(  // couleur rouge pour supprimer
+                  background: Container(
                     color: Colors.red,
                     alignment: Alignment.centerRight,
                     padding: EdgeInsets.only(right: 20.0),

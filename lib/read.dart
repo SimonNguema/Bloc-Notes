@@ -60,7 +60,7 @@ class _MyReadPageState extends State<MyReadPage> {
               child: TextFormField(
                 controller: titleController,
                 decoration: const InputDecoration(
-                  hintText: 'Titre',
+                  hintText: 'Devellopement mobile',
                   contentPadding: EdgeInsets.all(16),
                   border: InputBorder.none,
                   hintStyle: TextStyle(
@@ -72,7 +72,7 @@ class _MyReadPageState extends State<MyReadPage> {
               ),
             ),
             SizedBox(height: 16),
-            // Zone de texte pour le contenu de la note
+
             Container(
               decoration: BoxDecoration(
                 color: Colors.blueGrey,
@@ -82,7 +82,7 @@ class _MyReadPageState extends State<MyReadPage> {
                 controller: contentController,
                 maxLines: 10,
                 decoration: const InputDecoration(
-                  hintText: 'Contenu',
+                  hintText: 'Initiation au developpement mobille  avec flutter',
                   contentPadding: EdgeInsets.all(16),
                   border: InputBorder.none,
                   hintStyle: TextStyle(
@@ -93,6 +93,26 @@ class _MyReadPageState extends State<MyReadPage> {
                 ),
               ),
             ),
+            SizedBox(height: 16),
+            InkWell(        //InkWell est un widget Flutter qui est utilisé pour ajouter des interactions clics ou touches
+              onTap: () {
+
+                Navigator.of(context).pop(); // Naviguer vers la page d'accueil
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.deepOrange,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                padding: EdgeInsets.all(16),
+                child: const Center(
+                  child: Text(
+                    'Mettre a jour',
+                    style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

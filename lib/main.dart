@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:bloc_notes/home.dart';
+import 'package:bloc_notes/logo.dart';
 
 
 void main() {
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      home: MyHomePage(),
+      home: IntroPage(),
     );
   }
 }
